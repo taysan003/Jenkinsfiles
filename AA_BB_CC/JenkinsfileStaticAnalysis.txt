@@ -1,0 +1,12 @@
+node {
+git 'https://github.com/khatilov/jenkins.git'
+def mvnHome
+mvnHome = tool 'Maven_3.6.1'
+
+stage ('Maven') {sh "'${mvnHome}/bin/mvn' clean compile pmd:pmd pmd:cpd "}
+
+stage ('PMD') {step ([$class: 'PmdPublisher', pattern: '**/pmd*.xml', failureThreshold: 50, unstableThreshold: 20])}
+
+
+stage ('CPD') {step ([$class: 'DryPublisher', pattern: '**/cpd.xml', failureThreshold: 2, unstableThreshold: 1])}
+    }
